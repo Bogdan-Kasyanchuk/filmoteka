@@ -1,0 +1,37 @@
+.button {
+  display: block;
+  max-width: 140px;
+  padding: 8px 16px;
+  font-size: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  color: #fff;
+  line-height: 1;
+  border: 0;
+  border-radius: 2px;
+  background-color: #18819e;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.load-button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.up-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+}
+
+.button:hover {
+  background-color: #08587d;
+  box-shadow: 0px 4px 20px rgba(8, 88, 125, 0.6);
+}
+
+.back-button {
+  margin-left: 150px;
+}
