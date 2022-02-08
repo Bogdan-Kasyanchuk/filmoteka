@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styles from './Navigation.module.css';
+import Logo from 'components/Logo';
 
 const Navigation = () => {
   return (
@@ -12,8 +13,11 @@ const Navigation = () => {
             className={styles['navigation-link']}
             activeClassName={styles['navigation-link-active']}
           >
-            Home
+            HOME
           </NavLink>
+        </li>
+        <li>
+          <Logo children="MOVIE LIBRARY" />
         </li>
         <li className={styles['navigation-item']}>
           <NavLink
@@ -21,7 +25,7 @@ const Navigation = () => {
             className={styles['navigation-link']}
             activeClassName={styles['navigation-link-active']}
           >
-            Movies
+            MOVIE
           </NavLink>
         </li>
       </ul>

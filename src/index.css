@@ -1,15 +1,14 @@
 @import-normalize;
 
-html {
-  box-sizing: border-box;
-  width: 100vw;
-  overflow-x: hidden;
+* {
+  margin: 0;
+  padding: 0;
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
+  box-sizing: border-box;
 }
 
 body {
@@ -19,31 +18,22 @@ body {
   background-image: url('https://www.transparenttextures.com/patterns/inspiration-geometry.png');
 }
 
-h1,
-h2,
-h3,
-h4,
-p,
-ul,
-ol,
-li {
-  margin: 0;
-  padding: 0;
-}
-
 ul,
 ol {
   list-style: none;
 }
 
-button {
-  cursor: pointer;
-}
-
+picture,
 img {
   display: block;
 }
 
 a {
+  display: block;
   text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
 }

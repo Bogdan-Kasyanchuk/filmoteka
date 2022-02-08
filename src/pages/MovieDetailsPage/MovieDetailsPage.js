@@ -7,7 +7,7 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom';
-import Loading from 'components/Loading';
+import Spinner from 'components/Spinner';
 import NotFound from 'components/NotFound';
 import toastify from 'helpers/toastify';
 import PosterNotAvailable from '../../images/poster-not-available.jpg';
@@ -68,9 +68,9 @@ const MovieDetailsPage = () => {
 
   return (
     <>
-      {status === 'pending' && <Loading />}
+      {status === 'pending' && <Spinner />}
       <div className={styles['movie-details-container']}>
-        <Button name={'Go Back'} nameClass="back-button" onClick={onGoBack} />
+        <Button name={'Back'} nameClass="back-button" onClick={onGoBack} />
         {status === 'notFound' && <NotFound />}
         {status === 'resolved' && (
           <>

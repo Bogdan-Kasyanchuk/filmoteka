@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import MovieCard from 'components/MovieCard';
 import toastify from 'helpers/toastify';
-import Button from 'components/Button';
-import Loading from 'components/Loading';
+import Spinner from 'components/Spinner';
+import UpButton from 'components/UpButton';
 import { getTrending } from 'apiServices/movieAPI';
-import scrollTop from 'helpers/scrollTop';
-import { scrollBottom, scrollPosition } from 'helpers/scrollBottom';
 import styles from './HomePage.module.css';
+import { Pagination } from 'react-pagination-bar';
+import 'react-pagination-bar/dist/index.css';
 
 const Status = {
   PENDING: 'pending',
@@ -22,69 +22,76 @@ const HomePage = () => {
   const [movieTrending, setMovieTrending] = useState([]);
   const [status, setStatus] = useState(null);
   const [page, setPage] = useState(currentPage);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
-    async function fetchMovie() {
-      const { PENDING, RESOLVED, NOTFOUND } = Status;
-      setStatus(PENDING);
-      await getTrending(page)
-        .then(data => {
-          if (!data.results.length) {
-            setStatus(NOTFOUND);
-            toastify('warning', 'Sorry, there are no trending movies!');
-          } else {
-            setTotalPages(data.total_pages);
-            setMovieTrending(movieTrending => [
-              ...movieTrending,
-              ...data.results,
-            ]);
-            setStatus(RESOLVED);
-          }
-        })
-        .catch(error => {
+    const { PENDING, RESOLVED, NOTFOUND } = Status;
+    setStatus(PENDING);
+    getTrending(page)
+      .then(data => {
+        if (!data.results.length) {
           setStatus(NOTFOUND);
-          toastify('error', `${error}`);
-        });
-      if (page >= 2) scrollBottom();
-    }
-    fetchMovie();
-    if (page === 1) pushToHistory(page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+          toastify('warning', 'Sorry, there are no trending movies!');
+        } else {
+          setTotalResults(data.total_results);
+          setMovieTrending(data.results);
+          setStatus(RESOLVED);
+          if (page === 1)
+            toastify('success', 'Trending movies uploaded successfully!');
+        }
+      })
+      .catch(error => {
+        setStatus(NOTFOUND);
+        toastify('error', `${error}`);
+      });
   }, [page]);
 
   const pushToHistory = value =>
     history.push({ ...location, search: `page=${value}` });
 
-  const getLoadMore = () => {
-    scrollPosition();
-    setPage(prevState => Number(prevState) + 1);
-    pushToHistory(Number(page) + 1);
+  const onPageСhange = pageNumber => {
+    setPage(pageNumber);
+    pushToHistory(pageNumber);
   };
 
   return (
     <>
-      {status === 'pending' && <Loading />}
+      {status === 'pending' && <Spinner />}
       {status === 'resolved' && (
-        <div className={styles['home-wrapper']}>
-          <h1 className={styles['home-title']}>Trending today</h1>
-          <ul className={styles['home-list']}>
-            {movieTrending.map(element => (
-              <MovieCard key={element.id} element={element} url="movies" />
-            ))}
-          </ul>
-        </div>
+        <>
+          <div className={styles['home-wrapper']}>
+            <h1 className={styles['home-title']}>Trending today</h1>
+            <ul className={styles['home-list']}>
+              {movieTrending.map(element => (
+                <MovieCard key={element.id} element={element} url="movies" />
+              ))}
+            </ul>
+          </div>
+          <div
+            style={{
+              textAlign: 'center',
+              width: '800px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            <Pagination
+              initialPage={Number(page)}
+              itemsPerPage={20}
+              onPageСhange={onPageСhange}
+              totalItems={totalResults}
+              startLabel={'<<'}
+              endLabel={'>>'}
+              nextLabel={'>'}
+              prevLabel={'<'}
+              withGoToInput={true}
+              pageNeighbours={2}
+              withProgressBar={true}
+            />
+          </div>
+        </>
       )}
-      {movieTrending.length > 15 && page < totalPages && (
-        <Button
-          name={'Load more'}
-          nameClass="load-button"
-          onClick={getLoadMore}
-        />
-      )}
-      {movieTrending.length > 15 && (
-        <Button name={'To UP'} nameClass="up-button" onClick={scrollTop} />
-      )}
+      <UpButton />
     </>
   );
 };

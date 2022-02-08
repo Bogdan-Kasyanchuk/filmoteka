@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
-import Loading from 'components/Loading';
+import Spinner from 'components/Spinner';
 import MovieCard from 'components/MovieCard';
 import NotFound from 'components/NotFound';
 import SearchBar from 'components/SearchBar';
 import toastify from 'helpers/toastify';
-import Button from 'components/Button';
+import UpButton from 'components/UpButton';
 import { getMovie } from 'apiServices/movieAPI';
-import scrollTop from 'helpers/scrollTop';
-import { scrollBottom, scrollPosition } from 'helpers/scrollBottom';
 import styles from './MoviesPage.module.css';
+import { Pagination } from 'react-pagination-bar';
+import 'react-pagination-bar/dist/index.css';
 
 const Status = {
   PENDING: 'pending',
@@ -27,34 +27,32 @@ const MoviesPage = () => {
   const [status, setStatus] = useState(null);
   const [searchQuery, setSearchQuery] = useState(currentSearchQuery);
   const [page, setPage] = useState(currentPage);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalResults, setTotalResults] = useState(0);
   const { url } = useRouteMatch();
 
   useEffect(() => {
     if (!searchQuery) return;
     const { PENDING, RESOLVED, NOTFOUND } = Status;
     setStatus(PENDING);
-    async function fetchMovie() {
-      await getMovie(searchQuery, page)
-        .then(data => {
-          if (!data.results.length) {
-            setStatus(NOTFOUND);
-            toastify('warning', 'Sorry, there are no movies!');
-          } else {
-            setTotalPages(data.total_pages);
-            setMovie(movieTrending => [...movieTrending, ...data.results]);
-            setStatus(RESOLVED);
-          }
-        })
-        .catch(error => {
+    getMovie(searchQuery, page)
+      .then(data => {
+        if (!data.results.length) {
           setStatus(NOTFOUND);
-          toastify('error', `${error}`);
-        });
-      if (page >= 2) scrollBottom();
-    }
-    fetchMovie();
-    if (page === 1) pushToHistory(searchQuery, page);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+          toastify(
+            'warning',
+            'Sorry, there are no movies matching your search query. Please try again!',
+          );
+        } else {
+          setTotalResults(data.total_results);
+          setMovie(data.results);
+          setStatus(RESOLVED);
+          if (page === 1) toastify('success', 'Search successfully!');
+        }
+      })
+      .catch(error => {
+        setStatus(NOTFOUND);
+        toastify('error', `${error}`);
+      });
   }, [searchQuery, page]);
 
   const pushToHistory = (query, value) =>
@@ -71,36 +69,50 @@ const MoviesPage = () => {
     }
   };
 
-  const getLoadMore = () => {
-    scrollPosition();
-    setPage(prevState => Number(prevState) + 1);
-    pushToHistory(searchQuery, Number(page) + 1);
+  const onPageСhange = pageNumber => {
+    setPage(pageNumber);
+    pushToHistory(searchQuery, pageNumber);
   };
 
   return (
     <>
-      {status === 'pending' && <Loading />}
+      {status === 'pending' && <Spinner />}
       <div className={styles['movie-wrapper']}>
         <SearchBar onSubmit={handleFormSubmit} />
         {status === 'notFound' && <NotFound />}
         {status === 'resolved' && (
-          <ul className={styles['movie-list']}>
-            {movie.map(element => (
-              <MovieCard key={element.id} element={element} url={url} />
-            ))}
-          </ul>
+          <>
+            <ul className={styles['movie-list']}>
+              {movie.map(element => (
+                <MovieCard key={element.id} element={element} url={url} />
+              ))}
+            </ul>
+            <div
+              style={{
+                textAlign: 'center',
+                width: '800px',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+              }}
+            >
+              <Pagination
+                initialPage={Number(page)}
+                itemsPerPage={20}
+                onPageСhange={onPageСhange}
+                totalItems={totalResults}
+                startLabel={'<<'}
+                endLabel={'>>'}
+                nextLabel={'>'}
+                prevLabel={'<'}
+                withGoToInput={true}
+                pageNeighbours={2}
+                withProgressBar={true}
+              />
+            </div>
+          </>
         )}
       </div>
-      {movie.length > 15 && page < totalPages && (
-        <Button
-          name={'Load more'}
-          nameClass="load-button"
-          onClick={getLoadMore}
-        />
-      )}
-      {movie.length > 15 && (
-        <Button name={'To UP'} nameClass="up-button" onClick={scrollTop} />
-      )}
+      <UpButton />
     </>
   );
 };

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { ImSearch } from 'react-icons/im';
+import { CgSearch } from 'react-icons/cg';
+import { BiBrush } from 'react-icons/bi';
 import toastify from 'helpers/toastify';
 import styles from './SearchBar.module.css';
 
@@ -9,6 +10,10 @@ const SearchBar = ({ onSubmit }) => {
 
   const handleChange = event => {
     setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  const handleClick = () => {
+    setSearchQuery('');
   };
 
   const handleSubmit = event => {
@@ -25,7 +30,7 @@ const SearchBar = ({ onSubmit }) => {
     <div className={styles['search-wrapper']}>
       <form className={styles['search-form']} onSubmit={handleSubmit}>
         <button className={styles['search-form-button']} type="submit">
-          <ImSearch style={{ width: 24, height: 24 }} />
+          <CgSearch style={{ width: 28, height: 28, display: 'block' }} />
         </button>
         <input
           className={styles['search-form-input']}
@@ -36,6 +41,13 @@ const SearchBar = ({ onSubmit }) => {
           value={searchQuery}
           onChange={handleChange}
         />
+        <button
+          className={styles['search-form-button']}
+          type="button"
+          onClick={handleClick}
+        >
+          <BiBrush style={{ width: 28, height: 28, display: 'block' }} />
+        </button>
       </form>
     </div>
   );

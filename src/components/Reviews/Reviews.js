@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Loading from 'components/Loading';
+import Spinner from 'components/Spinner';
 import toastify from 'helpers/toastify';
 import ReviewsItem from 'components/ReviewsItem';
 import Button from 'components/Button';
+import UpButton from 'components/UpButton';
 import { getReviews } from 'apiServices/movieAPI';
 import { scrollBottom, scrollPosition } from 'helpers/scrollBottom';
-import scrollTop from 'helpers/scrollTop';
 import styles from './Reviews.module.css';
 
 const Status = {
@@ -53,7 +53,7 @@ const Reviews = () => {
 
   return (
     <>
-      {status === 'pending' && <Loading />}
+      {status === 'pending' && <Spinner />}
       {status === 'notFound' && (
         <p className={styles['reviews-title']}>
           We don't have any reviews for this movie!
@@ -73,9 +73,7 @@ const Reviews = () => {
           onClick={getLoadMore}
         />
       )}
-      {reviews.length > 5 && (
-        <Button name={'To UP'} nameClass="up-button" onClick={scrollTop} />
-      )}
+      <UpButton />
     </>
   );
 };

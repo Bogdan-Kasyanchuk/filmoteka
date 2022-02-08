@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Loading from 'components/Loading';
+import Spinner from 'components/Spinner';
 import toastify from 'helpers/toastify';
 import CastItem from 'components/CastItem';
-import Button from 'components/Button';
+import UpButton from 'components/UpButton';
 import { getCredits } from 'apiServices/movieAPI';
-import scrollTop from 'helpers/scrollTop';
 import styles from './Cast.module.css';
 
 const Status = {
@@ -40,7 +39,7 @@ const Cast = () => {
 
   return (
     <>
-      {status === 'pending' && <Loading />}
+      {status === 'pending' && <Spinner />}
       {status === 'notFound' && (
         <p className={styles['cast-title']}>
           We don't have any reviews for this movie!
@@ -53,9 +52,7 @@ const Cast = () => {
           ))}
         </ul>
       )}
-      {cast.length > 12 && (
-        <Button name={'To UP'} nameClass="up-button" onClick={scrollTop} />
-      )}
+      <UpButton />
     </>
   );
 };
