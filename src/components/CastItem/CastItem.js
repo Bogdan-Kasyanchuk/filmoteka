@@ -1,31 +1,34 @@
 import PropTypes from 'prop-types';
-import PhotoNotAvailable from '../../images/photo-not-available.jpg';
+import PhotoNotAvailable from 'images/photo-not-available.jpg';
 import styles from './CastItem.module.css';
 
 const CastItem = ({ element }) => {
+  const { profile_path, name, original_name, character, popularity } = element;
+
+  const normalizedName = name ? name : original_name;
+
   return (
     <li className={styles['cast-item']}>
-      <div className={styles['cast-wrapper-img']}>
+      <div className={styles['cast-item-wrapper-img']}>
         <img
-          className={styles['cast-img']}
+          className={styles['cast-item-img']}
           src={
-            element.profile_path
-              ? `https://image.tmdb.org/t/p/w500${element.profile_path}`
+            profile_path
+              ? `https://image.tmdb.org/t/p/w500${profile_path}`
               : PhotoNotAvailable
           }
-          alt={element.name ? element.name : element.original_name}
+          alt={normalizedName}
         />
       </div>
-      <div className={styles['cast-description']}>
-        <p className={styles['cast-title']}>
-          {' '}
-          {element.name ? element.name : element.original_name}
+      <div className={styles['cast-item-description']}>
+        <p className={styles['cast-item-description-title']}>
+          {normalizedName}
         </p>
-        <p className={styles['cast-text']}>
-          Character: <span>{element.character}</span>
+        <p className={styles['cast-item-description-text']}>
+          Character: <span>{character}</span>
         </p>
-        <p className={styles['cast-text']}>
-          Popularity: <span>{element.popularity}</span>
+        <p className={styles['cast-item-description-text']}>
+          Popularity: <span>{popularity.toFixed(1)}</span>
         </p>
       </div>
     </li>

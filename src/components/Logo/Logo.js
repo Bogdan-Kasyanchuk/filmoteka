@@ -1,13 +1,19 @@
 import PropTypes from 'prop-types';
 import { BiCameraMovie } from 'react-icons/bi';
-// import styles from './Navigation.module.css';
+import styles from './Logo.module.css';
 
 const Logo = ({ children }) => {
   return (
-    <>
-      <BiCameraMovie />
-      <span>{children}</span>
-    </>
+    <div className={styles.logo}>
+      <BiCameraMovie
+        style={{
+          width: 30,
+          height: 30,
+          // display: 'block',
+        }}
+      />
+      <span className={styles['logo-text']}>{children}</span>
+    </div>
   );
 };
 

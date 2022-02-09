@@ -13,7 +13,7 @@ async function fetchApi(url = '') {
   throw new Error(response.status);
 }
 
-export function getTrending(page) {
+export function getTrendingMovies(page) {
   return fetchApi(`${BASE_URL}/trending/all/day?api_key=${KEY}&page=${page}`);
 }
 
@@ -23,7 +23,7 @@ export function getMovie(query, page) {
   );
 }
 
-export function getMovieInform(id) {
+export function getMovieDetail(id) {
   return fetchApi(`${BASE_URL}/movie/${id}?api_key=${KEY}&language=en-US`);
 }
 

@@ -1,10 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Container from 'components/Container';
-import Navigation from 'components/Navigation';
+import AppBar from 'components/AppBar';
 import Spinner from 'components/Spinner';
+import Container from 'components/Container';
+import UpButton from 'components/UpButton';
+import 'react-toastify/dist/ReactToastify.css';
 
 const HomePage = lazy(() =>
   import('pages/HomePage' /* webpackChunkName: "HomePage" */),
@@ -19,17 +20,18 @@ const MovieDetailsPage = lazy(() =>
 function App() {
   return (
     <>
-      <Container>
-        <Navigation />
-        <Suspense fallback={<Spinner />}>
+      <AppBar />
+      <Suspense fallback={<Spinner />}>
+        <Container>
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/movies" component={MoviesPage} />
             <Route path="/movies/:movieId" component={MovieDetailsPage} />
             <Redirect to="/" />
           </Switch>
-        </Suspense>
-      </Container>
+        </Container>
+      </Suspense>
+      <UpButton />
       <ToastContainer />
     </>
   );

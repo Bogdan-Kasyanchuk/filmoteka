@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import MovieCard from 'components/MovieCard';
-import NotFound from 'components/NotFound';
 import SearchBar from 'components/SearchBar';
-import toastify from 'helpers/toastify';
-import UpButton from 'components/UpButton';
-import { getMovie } from 'apiServices/movieAPI';
+import NotFound from 'components/NotFound';
+import MovieCard from 'components/MovieCard';
+import CustomPagination from 'components/CustomPagination';
+import { getMovie } from 'apiService/movieAPI';
+import notification from 'helpers/notification';
 import styles from './MoviesPage.module.css';
-import { Pagination } from 'react-pagination-bar';
-import 'react-pagination-bar/dist/index.css';
 
 const Status = {
   PENDING: 'pending',
   RESOLVED: 'resolved',
-  NOTFOUND: 'notFound',
+  REJECTED: 'rejected',
 };
 
 const MoviesPage = () => {
-  const history = useHistory();
   const location = useLocation();
   const currentSearchQuery =
     new URLSearchParams(location.search).get('query') ?? '';
@@ -28,17 +25,18 @@ const MoviesPage = () => {
   const [searchQuery, setSearchQuery] = useState(currentSearchQuery);
   const [page, setPage] = useState(currentPage);
   const [totalResults, setTotalResults] = useState(0);
+  const history = useHistory();
   const { url } = useRouteMatch();
 
   useEffect(() => {
     if (!searchQuery) return;
-    const { PENDING, RESOLVED, NOTFOUND } = Status;
+    const { PENDING, RESOLVED, REJECTED } = Status;
     setStatus(PENDING);
     getMovie(searchQuery, page)
       .then(data => {
         if (!data.results.length) {
-          setStatus(NOTFOUND);
-          toastify(
+          setStatus(REJECTED);
+          notification(
             'warning',
             'Sorry, there are no movies matching your search query. Please try again!',
           );
@@ -46,12 +44,12 @@ const MoviesPage = () => {
           setTotalResults(data.total_results);
           setMovie(data.results);
           setStatus(RESOLVED);
-          if (page === 1) toastify('success', 'Search successfully!');
+          if (page === 1) notification('success', 'Search successfully!');
         }
       })
       .catch(error => {
-        setStatus(NOTFOUND);
-        toastify('error', `${error}`);
+        setStatus(REJECTED);
+        notification('error', `${error}`);
       });
   }, [searchQuery, page]);
 
@@ -61,11 +59,13 @@ const MoviesPage = () => {
       search: `query=${query}&page=${value}`,
     });
 
-  const handleFormSubmit = query => {
+  const handlerFormSubmit = query => {
     if (query !== searchQuery) {
       setMovie([]);
       setSearchQuery(query);
       setPage(1);
+    } else {
+      notification('warning', 'Enter the different name of the movie!');
     }
   };
 
@@ -77,9 +77,9 @@ const MoviesPage = () => {
   return (
     <>
       {status === 'pending' && <Spinner />}
-      <div className={styles['movie-wrapper']}>
-        <SearchBar onSubmit={handleFormSubmit} />
-        {status === 'notFound' && <NotFound />}
+      <div className={styles['movie']}>
+        <SearchBar onSubmit={handlerFormSubmit} />
+        {status === 'rejected' && <NotFound />}
         {status === 'resolved' && (
           <>
             <ul className={styles['movie-list']}>
@@ -87,32 +87,14 @@ const MoviesPage = () => {
                 <MovieCard key={element.id} element={element} url={url} />
               ))}
             </ul>
-            <div
-              style={{
-                textAlign: 'center',
-                width: '800px',
-                marginLeft: 'auto',
-                marginRight: 'auto',
-              }}
-            >
-              <Pagination
-                initialPage={Number(page)}
-                itemsPerPage={20}
-                onPageСhange={onPageСhange}
-                totalItems={totalResults}
-                startLabel={'<<'}
-                endLabel={'>>'}
-                nextLabel={'>'}
-                prevLabel={'<'}
-                withGoToInput={true}
-                pageNeighbours={2}
-                withProgressBar={true}
-              />
-            </div>
+            <CustomPagination
+              page={page}
+              totalResults={totalResults}
+              onPageСhange={onPageСhange}
+            />
           </>
         )}
       </div>
-      <UpButton />
     </>
   );
 };

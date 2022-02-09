@@ -1,11 +1,9 @@
-import imgNotFound from '../../images/not-found.jpg';
+import imgNotFound from 'images/not-found.jpg';
 import styles from './NotFound.module.css';
 
 const NotFound = () => {
   return (
-    <div>
-      <img className={styles.wrapper} src={imgNotFound} alt="Not found" />
-    </div>
+    <img className={styles['not-found']} src={imgNotFound} alt="Not found" />
   );
 };
 

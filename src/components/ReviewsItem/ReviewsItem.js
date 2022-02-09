@@ -1,27 +1,32 @@
 import PropTypes from 'prop-types';
-import PhotoNotAvailable from '../../images/photo-not-available.jpg';
+import PhotoNotAvailable from 'images/photo-not-available.jpg';
 import styles from './ReviewsItem.module.css';
 
 const ReviewsItem = ({ element }) => {
+  const {
+    author_details: { avatar_path },
+    author,
+    content,
+  } = element;
+
   return (
     <li className={styles['reviews-item']}>
-      <div className={styles['reviews-wrapper']}>
-        <div className={styles['reviews-wrapper-img']}>
+      <div className={styles['reviews-item-wrapper']}>
+        <div className={styles['reviews-item-wrapper-img']}>
           <img
-            className={styles['reviews-img']}
+            className={styles['reviews-item-img']}
             src={
-              !element.author_details.avatar_path
+              !avatar_path
                 ? PhotoNotAvailable
-                : (element.author_details.avatar_path.includes('/https:') &&
-                    element.author_details.avatar_path.slice(1)) ||
-                  `https://secure.gravatar.com/avatar${element.author_details.avatar_path}`
+                : (avatar_path.includes('/https:') && avatar_path.slice(1)) ||
+                  `https://secure.gravatar.com/avatar${avatar_path}`
             }
-            alt={element.author}
+            alt={author}
           />
         </div>
-        <p className={styles['reviews-title']}> {element.author}</p>
+        <p className={styles['reviews-item-title']}> {author}</p>
       </div>
-      <p className={styles['reviews-text']}> {element.content}</p>
+      <p className={styles['reviews-item-text']}> {content}</p>
     </li>
   );
 };

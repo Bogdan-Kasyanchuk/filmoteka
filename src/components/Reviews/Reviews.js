@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import toastify from 'helpers/toastify';
 import ReviewsItem from 'components/ReviewsItem';
 import Button from 'components/Button';
-import UpButton from 'components/UpButton';
-import { getReviews } from 'apiServices/movieAPI';
+import { getReviews } from 'apiService/movieAPI';
 import { scrollBottom, scrollPosition } from 'helpers/scrollBottom';
+import notification from 'helpers/notification';
 import styles from './Reviews.module.css';
 
 const Status = {
   PENDING: 'pending',
   RESOLVED: 'resolved',
-  NOTFOUND: 'notFound',
+  REJECTED: 'rejected',
 };
 
 const Reviews = () => {
@@ -24,29 +23,34 @@ const Reviews = () => {
 
   useEffect(() => {
     async function fetchReviews() {
-      const { PENDING, RESOLVED, NOTFOUND } = Status;
+      const { PENDING, RESOLVED, REJECTED } = Status;
       setStatus(PENDING);
       await getReviews(movieId, page)
         .then(data => {
           if (!data.results.length) {
-            setStatus(NOTFOUND);
-            toastify('warning', "We don't have any reviews for this movie!");
+            setStatus(REJECTED);
+            notification(
+              'warning',
+              "We don't have any reviews for this movie!",
+            );
           } else {
             setTotalPages(data.total_pages);
             setReviews(reviews => [...reviews, ...data.results]);
             setStatus(RESOLVED);
+            if (page === 1)
+              notification('success', 'Reviews uploaded successfully!');
           }
         })
         .catch(error => {
-          setStatus(NOTFOUND);
-          toastify('error', `${error}`);
+          setStatus(REJECTED);
+          notification('error', `${error}`);
         });
       if (page >= 2) scrollBottom();
     }
     fetchReviews();
   }, [movieId, page]);
 
-  const getLoadMore = () => {
+  const handlerClick = () => {
     scrollPosition();
     setPage(prevState => prevState + 1);
   };
@@ -54,7 +58,7 @@ const Reviews = () => {
   return (
     <>
       {status === 'pending' && <Spinner />}
-      {status === 'notFound' && (
+      {status === 'rejected' && (
         <p className={styles['reviews-title']}>
           We don't have any reviews for this movie!
         </p>
@@ -66,14 +70,13 @@ const Reviews = () => {
           ))}
         </ul>
       )}
-      {reviews.length > 15 && page < totalPages && (
+      {page < totalPages && (
         <Button
           name={'Load more'}
           nameClass="load-button"
-          onClick={getLoadMore}
+          onClick={handlerClick}
         />
       )}
-      <UpButton />
     </>
   );
 };

@@ -8,28 +8,28 @@
   border-bottom: 1px solid #fff;
 }
 
-.reviews-wrapper {
+.reviews-item-wrapper {
   margin-right: 30px;
 }
 
-.reviews-wrapper-img {
+.reviews-item-wrapper-img {
   margin-bottom: 10px;
   width: 100px;
   height: auto;
 }
 
-.reviews-img {
+.reviews-item-img {
   height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
-.reviews-title {
+.reviews-item-title {
   margin-bottom: 5px;
   font-size: 22px;
   color: #fff;
 }
 
-.reviews-text {
+.reviews-item-text {
   font-size: 18px;
 }

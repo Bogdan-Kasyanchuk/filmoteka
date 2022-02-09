@@ -8,11 +8,11 @@ import {
   useLocation,
 } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import NotFound from 'components/NotFound';
-import toastify from 'helpers/toastify';
-import PosterNotAvailable from '../../images/poster-not-available.jpg';
 import Button from 'components/Button';
-import { getMovieInform } from 'apiServices/movieAPI';
+import NotFound from 'components/NotFound';
+import MovieCardDetails from 'components/MovieCardDetails';
+import { getMovieDetail } from 'apiService/movieAPI';
+import notification from 'helpers/notification';
 import styles from './MovieDetailsPage.module.css';
 
 const Cast = lazy(() =>
@@ -25,34 +25,35 @@ const Reviews = lazy(() =>
 const Status = {
   PENDING: 'pending',
   RESOLVED: 'resolved',
-  NOTFOUND: 'notFound',
+  REJECTED: 'rejected',
 };
 
 const MovieDetailsPage = () => {
-  const { url, path } = useRouteMatch();
-  const history = useHistory();
-  const location = useLocation();
-  const { movieId } = useParams();
   const [movieInform, setMovieInform] = useState({});
   const [status, setStatus] = useState(null);
+  const location = useLocation();
   const refLocation = useRef(location);
+  const { url, path } = useRouteMatch();
+  const history = useHistory();
+  const { movieId } = useParams();
 
   useEffect(() => {
-    const { PENDING, RESOLVED, NOTFOUND } = Status;
+    const { PENDING, RESOLVED, REJECTED } = Status;
     setStatus(PENDING);
-    getMovieInform(movieId)
+    getMovieDetail(movieId)
       .then(data => {
         if (Object.keys(data).length === 0) {
-          setStatus(NOTFOUND);
-          toastify('warning', 'Sorry, there are no movies!');
+          setStatus(REJECTED);
+          notification('warning', 'Sorry, no movie details!');
         } else {
           setMovieInform(data);
           setStatus(RESOLVED);
+          notification('success', 'Movie details uploaded successfully!');
         }
       })
       .catch(error => {
-        setStatus(NOTFOUND);
-        toastify('error', `${error}`);
+        setStatus(REJECTED);
+        notification('error', `${error}`);
       });
   }, [movieId]);
 
@@ -69,91 +70,25 @@ const MovieDetailsPage = () => {
   return (
     <>
       {status === 'pending' && <Spinner />}
-      <div className={styles['movie-details-container']}>
-        <Button name={'Back'} nameClass="back-button" onClick={onGoBack} />
-        {status === 'notFound' && <NotFound />}
+      <div className={styles['movie-details']}>
+        {(status === 'rejected' || status === 'resolved') && (
+          <Button name={'Back'} nameClass="back-button" onClick={onGoBack} />
+        )}
+        {status === 'rejected' && <NotFound />}
         {status === 'resolved' && (
           <>
-            <div className={styles['movie-details-wrapper']}>
-              <div className={styles['movie-details-wrapper-img']}>
-                <img
-                  className={styles['movie-details-img']}
-                  src={
-                    movieInform.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movieInform.poster_path}`
-                      : PosterNotAvailable
-                  }
-                  alt={
-                    movieInform.title
-                      ? movieInform.title
-                      : movieInform.original_title
-                  }
-                />
-              </div>
-              <div className={styles['movie-details-description']}>
-                <h2 className={styles['movie-details-title']}>
-                  {movieInform.title
-                    ? movieInform.title
-                    : movieInform.original_title}{' '}
-                  ({movieInform.release_date.slice(0, 4)})
-                </h2>
-                <ul className={styles['movie-details-list']}>
-                  <li className={styles['movie-details-item']}>
-                    Vote count: <span>{movieInform.vote_count}</span>
-                  </li>
-                  <li className={styles['movie-details-item']}>
-                    Vote average: <span>{movieInform.vote_average}</span>
-                  </li>
-                </ul>
-                <div className={styles['movie-details-overview']}>
-                  <h3 className={styles['movie-details-overview-title']}>
-                    Overview:
-                  </h3>
-                  <p className={styles['movie-details-overview-text']}>
-                    {movieInform.overview}
-                  </p>
-                </div>
-                <div className={styles['movie-details-genres']}>
-                  <h3 className={styles['movie-details-genres-title']}>
-                    Genres:
-                  </h3>
-                  <ul className={styles['movie-details-genres-list']}>
-                    {movieInform.genres.map(element => (
-                      <li
-                        className={styles['movie-details-genres-item']}
-                        key={element.id}
-                      >
-                        {element.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={styles['movie-details-countries']}>
-                  <h3 className={styles['movie-details-countries-title']}>
-                    Production countries:
-                  </h3>
-                  <ul className={styles['movie-details-countries-list']}>
-                    {movieInform.production_countries.map(element => (
-                      <li
-                        className={styles['movie-details-countries-item']}
-                        key={element.name}
-                      >
-                        {element.name}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className={styles['add-inform-wrapper']}>
-              <h3 className={styles['add-inform-title']}>
+            <MovieCardDetails movieInform={movieInform} />
+            <div className={styles['movie-details-add-inform']}>
+              <h3 className={styles['movie-details-add-inform-title']}>
                 Additional information:
               </h3>
-              <ul className={styles['add-inform-list']}>
-                <li className={styles['add-inform-item']}>
+              <ul className={styles['movie-details-add-inform-list']}>
+                <li className={styles['movie-details-add-inform-item']}>
                   <NavLink
-                    className={styles['add-inform-link']}
-                    activeClassName={styles['add-inform-link-active']}
+                    className={styles['movie-details-add-inform-link']}
+                    activeClassName={
+                      styles['movie-details-add-inform-link-active']
+                    }
                     to={{
                       pathname: `${url}/cast`,
                       state: { from: location },
@@ -162,10 +97,12 @@ const MovieDetailsPage = () => {
                     Cast
                   </NavLink>
                 </li>
-                <li className={styles['add-inform-item']}>
+                <li className={styles['movie-details-add-inform-item']}>
                   <NavLink
-                    className={styles['add-inform-link']}
-                    activeClassName={styles['add-inform-link-active']}
+                    className={styles['movie-details-add-inform-link']}
+                    activeClassName={
+                      styles['movie-details-add-inform-link-active']
+                    }
                     to={{
                       pathname: `${url}/reviews`,
                       state: { from: location },
@@ -176,7 +113,7 @@ const MovieDetailsPage = () => {
                 </li>
               </ul>
             </div>
-            <div>
+            <div className={styles['movie-details-add-inform-wrapper']}>
               <Route exact path={`${path}/cast`} component={Cast} />
               <Route exact path={`${path}/reviews`} component={Reviews} />
             </div>

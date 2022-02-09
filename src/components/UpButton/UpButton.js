@@ -1,12 +1,12 @@
-import './UpButton.css';
 import ScrollUpButton from 'react-scroll-up-button';
 import { ImArrowUp } from 'react-icons/im';
+import styles from './UpButton.module.css';
 
 const UpButton = () => {
   return (
     <ScrollUpButton
-      ContainerClassName="AnyClassForContainer"
-      TransitionClassName="AnyClassForTransition"
+      ContainerClassName={styles['for-container']}
+      TransitionClassName={styles['for-transition']}
     >
       <ImArrowUp
         style={{

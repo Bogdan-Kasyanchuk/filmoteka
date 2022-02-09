@@ -1,0 +1,71 @@
+.movie-card-details {
+  display: flex;
+  margin-bottom: 20px;
+  padding-left: 150px;
+  padding-right: 150px;
+  padding-top: 20px;
+}
+
+.movie-card-details-wrapper-img {
+  margin-right: 50px;
+  min-width: 350px;
+  max-width: 350px;
+  height: 100%;
+}
+
+.movie-card-details-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.movie-card-details-title {
+  margin-bottom: 20px;
+  font-size: 30px;
+  color: #fff;
+}
+
+.movie-card-details-list {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.movie-card-details-item:not(:last-child),
+.movie-card-details-countries-item:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.movie-card-details-item > span {
+  font-weight: 400;
+}
+
+.movie-card-details-overview,
+.movie-card-details-genres {
+  margin-bottom: 20px;
+}
+
+.movie-card-details-overview-title,
+.movie-card-details-genres-title,
+.movie-card-details-countries-title {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.movie-card-details-overview-text,
+.movie-card-details-countries-list {
+  padding-left: 20px;
+  font-size: 20px;
+}
+
+.movie-card-details-genres-list {
+  display: flex;
+  padding-left: 20px;
+  font-size: 20px;
+}
+
+.movie-card-details-genres-item:not(:last-child) {
+  margin-right: 15px;
+  padding-right: 15px;
+  border-right: 1px solid #212121;
+}
