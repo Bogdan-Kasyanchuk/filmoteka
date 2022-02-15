@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import ReviewsItem from 'components/ReviewsItem';
+import SubTitle from 'components/SubTitle';
+import ReviewsList from 'components/ReviewsList';
 import Button from 'components/Button';
 import { getReviews } from 'apiService/movieAPI';
-import { scrollBottom, scrollPosition } from 'helpers/scrollBottom';
+import { scrollBottom, getScrollPosition } from 'helpers/scrollBottom';
 import notification from 'helpers/notification';
-import styles from './Reviews.module.css';
 
 const Status = {
   PENDING: 'pending',
@@ -29,16 +29,10 @@ const Reviews = () => {
         .then(data => {
           if (!data.results.length) {
             setStatus(REJECTED);
-            notification(
-              'warning',
-              "We don't have any reviews for this movie!",
-            );
           } else {
             setTotalPages(data.total_pages);
             setReviews(reviews => [...reviews, ...data.results]);
             setStatus(RESOLVED);
-            if (page === 1)
-              notification('success', 'Reviews uploaded successfully!');
           }
         })
         .catch(error => {
@@ -51,7 +45,7 @@ const Reviews = () => {
   }, [movieId, page]);
 
   const handlerClick = () => {
-    scrollPosition();
+    getScrollPosition();
     setPage(prevState => prevState + 1);
   };
 
@@ -59,17 +53,9 @@ const Reviews = () => {
     <>
       {status === 'pending' && <Spinner />}
       {status === 'rejected' && (
-        <p className={styles['reviews-title']}>
-          We don't have any reviews for this movie!
-        </p>
+        <SubTitle>We don't have any reviews for this movie!</SubTitle>
       )}
-      {status === 'resolved' && (
-        <ul className={styles['reviews-list']}>
-          {reviews.map(element => (
-            <ReviewsItem key={element.id} element={element} />
-          ))}
-        </ul>
-      )}
+      {status === 'resolved' && <ReviewsList reviews={reviews} />}
       {page < totalPages && (
         <Button
           name={'Load more'}

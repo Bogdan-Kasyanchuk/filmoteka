@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import MovieCard from 'components/MovieCard';
+import Title from 'components/Title';
+import MovieList from 'components/MovieList';
 import CustomPagination from 'components/CustomPagination';
 import { getTrendingMovies } from 'apiService/movieAPI';
 import notification from 'helpers/notification';
-import styles from './HomePage.module.css';
 
 const Status = {
   PENDING: 'pending',
@@ -15,7 +15,9 @@ const Status = {
 
 const HomePage = () => {
   const location = useLocation();
-  const currentPage = new URLSearchParams(location.search).get('page') ?? 1;
+  const currentPage = Number(
+    new URLSearchParams(location.search).get('page') ?? 1,
+  );
   const [movieTrending, setMovieTrending] = useState([]);
   const [status, setStatus] = useState(null);
   const [page, setPage] = useState(currentPage);
@@ -34,8 +36,6 @@ const HomePage = () => {
           setTotalResults(data.total_results);
           setMovieTrending(data.results);
           setStatus(RESOLVED);
-          if (page === 1)
-            notification('success', 'Trending movies uploaded successfully!');
         }
       })
       .catch(error => {
@@ -57,14 +57,8 @@ const HomePage = () => {
       {status === 'pending' && <Spinner />}
       {status === 'resolved' && (
         <>
-          <div className={styles['home']}>
-            <h1 className={styles['home-title']}>Trending today</h1>
-            <ul className={styles['home-list']}>
-              {movieTrending.map(element => (
-                <MovieCard key={element.id} element={element} url="movies" />
-              ))}
-            </ul>
-          </div>
+          <Title>Trending today</Title>
+          <MovieList movie={movieTrending} />
           <CustomPagination
             page={page}
             totalResults={totalResults}

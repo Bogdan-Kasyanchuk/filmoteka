@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
-import { BiCameraMovie } from 'react-icons/bi';
+import { NavLink } from 'react-router-dom';
+import { ImFilm } from 'react-icons/im';
 import styles from './Logo.module.css';
 
 const Logo = ({ children }) => {
   return (
-    <div className={styles.logo}>
-      <BiCameraMovie
-        style={{
-          width: 30,
-          height: 30,
-          // display: 'block',
-        }}
-      />
-      <span className={styles['logo-text']}>{children}</span>
-    </div>
+    <NavLink exact to="/" className={styles.logo}>
+      <ImFilm />
+      <h1 className={styles['logo-text']}>{children}</h1>
+    </NavLink>
   );
 };
 

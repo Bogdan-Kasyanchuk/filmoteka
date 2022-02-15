@@ -3,7 +3,13 @@ import styles from './NotFound.module.css';
 
 const NotFound = () => {
   return (
-    <img className={styles['not-found']} src={imgNotFound} alt="Not found" />
+    <div className={styles['not-found']}>
+      <img
+        className={styles['not-found-img']}
+        src={imgNotFound}
+        alt="Not found"
+      />
+    </div>
   );
 };
 

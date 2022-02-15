@@ -1,6 +1,7 @@
 @import-normalize;
 
-* {
+*,
+h1 {
   margin: 0;
   padding: 0;
 }
@@ -12,9 +13,9 @@
 }
 
 body {
-  margin: 0;
-  color: #212121;
-  background-color: #6e6e6e;
+  font-family: 'Roboto', sans-serif;
+  color: #111111;
+  background-color: #555555;
   background-image: url('https://www.transparenttextures.com/patterns/inspiration-geometry.png');
 }
 
@@ -33,7 +34,8 @@ a {
   text-decoration: none;
 }
 
-button {
+button,
+input {
   font-family: inherit;
   cursor: pointer;
 }

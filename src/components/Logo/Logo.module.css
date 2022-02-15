@@ -1,0 +1,49 @@
+.logo {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  color: #18819e;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo:hover,
+.logo:focus-visible {
+  color: #08587d;
+  outline: none;
+}
+
+.logo > svg {
+  margin-right: 8px;
+  width: auto;
+  height: 46px;
+}
+
+.logo-text {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 767px) {
+  .logo-text {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .logo > svg {
+    width: auto;
+    height: 38px;
+  }
+  .logo-text {
+    width: 60px;
+    line-height: 1.1;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .logo-text {
+    font-size: 30px;
+  }
+}

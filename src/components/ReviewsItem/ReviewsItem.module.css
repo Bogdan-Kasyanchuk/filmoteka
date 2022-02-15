@@ -1,15 +1,16 @@
 .reviews-item {
-  display: flex;
+  display: flow-root;
 }
 
 .reviews-item:not(:last-child) {
   margin-bottom: 20px;
   padding-bottom: 5px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #ffffff;
 }
 
 .reviews-item-wrapper {
-  margin-right: 30px;
+  float: left;
+  margin-right: 20px;
 }
 
 .reviews-item-wrapper-img {
@@ -19,17 +20,21 @@
 }
 
 .reviews-item-img {
-  height: 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
 .reviews-item-title {
-  margin-bottom: 5px;
-  font-size: 22px;
-  color: #fff;
+  width: 100px;
+  font-size: 20px;
+  line-height: 1.1;
+  color: #ffffff;
+  word-wrap: break-word;
 }
 
 .reviews-item-text {
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.1;
+  word-wrap: break-word;
 }

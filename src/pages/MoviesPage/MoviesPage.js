@@ -3,11 +3,10 @@ import { useRouteMatch, useHistory, useLocation } from 'react-router-dom';
 import Spinner from 'components/Spinner';
 import SearchBar from 'components/SearchBar';
 import NotFound from 'components/NotFound';
-import MovieCard from 'components/MovieCard';
+import MovieList from 'components/MovieList';
 import CustomPagination from 'components/CustomPagination';
 import { getMovie } from 'apiService/movieAPI';
 import notification from 'helpers/notification';
-import styles from './MoviesPage.module.css';
 
 const Status = {
   PENDING: 'pending',
@@ -19,7 +18,9 @@ const MoviesPage = () => {
   const location = useLocation();
   const currentSearchQuery =
     new URLSearchParams(location.search).get('query') ?? '';
-  const currentPage = new URLSearchParams(location.search).get('page') ?? 1;
+  const currentPage = Number(
+    new URLSearchParams(location.search).get('page') ?? 1,
+  );
   const [movie, setMovie] = useState([]);
   const [status, setStatus] = useState(null);
   const [searchQuery, setSearchQuery] = useState(currentSearchQuery);
@@ -44,7 +45,6 @@ const MoviesPage = () => {
           setTotalResults(data.total_results);
           setMovie(data.results);
           setStatus(RESOLVED);
-          if (page === 1) notification('success', 'Search successfully!');
         }
       })
       .catch(error => {
@@ -77,24 +77,18 @@ const MoviesPage = () => {
   return (
     <>
       {status === 'pending' && <Spinner />}
-      <div className={styles['movie']}>
-        <SearchBar onSubmit={handlerFormSubmit} />
-        {status === 'rejected' && <NotFound />}
-        {status === 'resolved' && (
-          <>
-            <ul className={styles['movie-list']}>
-              {movie.map(element => (
-                <MovieCard key={element.id} element={element} url={url} />
-              ))}
-            </ul>
-            <CustomPagination
-              page={page}
-              totalResults={totalResults}
-              onPageСhange={onPageСhange}
-            />
-          </>
-        )}
-      </div>
+      <SearchBar onSubmit={handlerFormSubmit} />
+      {status === 'rejected' && <NotFound />}
+      {status === 'resolved' && (
+        <>
+          <MovieList movie={movie} url={url} />
+          <CustomPagination
+            page={page}
+            totalResults={totalResults}
+            onPageСhange={onPageСhange}
+          />
+        </>
+      )}
     </>
   );
 };

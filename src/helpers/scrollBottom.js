@@ -1,8 +1,8 @@
-let getScrollPosition = null;
+let getPosition = null;
 
-export const scrollPosition = () => {
-  getScrollPosition = window.pageYOffset;
-  return getScrollPosition;
+export const getScrollPosition = () => {
+  getPosition = window.pageYOffset;
+  return getPosition;
 };
 
 export const scrollBottom = () => {

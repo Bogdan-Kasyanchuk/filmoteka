@@ -1,10 +1,10 @@
 .for-container {
   position: fixed;
   right: -100px;
-  bottom: 22px;
+  bottom: 30px;
   padding: 8px 12px;
-  border: 0;
   color: #ffffff;
+  border: none;
   border-radius: 2px;
   background-color: #18819e;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
@@ -13,11 +13,24 @@
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.for-container:hover {
+.for-container:hover,
+.for-container:focus-visible {
   background-color: #08587d;
-  box-shadow: 0px 4px 20px rgba(8, 88, 125, 0.6);
+  box-shadow: 0px 4px 16px rgba(8, 88, 125, 0.6);
+  outline: none;
 }
 
+.for-container > svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
 .for-transition {
-  right: 20px;
+  right: 30px;
+}
+
+@media screen and (max-width: 767px) {
+  .for-container {
+    bottom: 80px;
+  }
 }

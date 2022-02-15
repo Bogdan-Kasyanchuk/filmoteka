@@ -3,8 +3,8 @@ import { Circles } from 'react-loader-spinner';
 const Spinner = () => {
   return (
     <Circles
-      height={100}
       width={100}
+      height={100}
       color="#18819e"
       wrapperStyle={{
         position: 'fixed',

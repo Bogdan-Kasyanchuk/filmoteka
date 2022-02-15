@@ -1,8 +1,7 @@
-import { useState, useEffect, lazy, useRef } from 'react';
+import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 import {
   Route,
   useParams,
-  NavLink,
   useRouteMatch,
   useHistory,
   useLocation,
@@ -11,9 +10,9 @@ import Spinner from 'components/Spinner';
 import Button from 'components/Button';
 import NotFound from 'components/NotFound';
 import MovieCardDetails from 'components/MovieCardDetails';
+import AddInfoNavigation from 'components/AddInfoNavigation';
 import { getMovieDetail } from 'apiService/movieAPI';
 import notification from 'helpers/notification';
-import styles from './MovieDetailsPage.module.css';
 
 const Cast = lazy(() =>
   import('components/Cast' /* webpackChunkName: "Cast" */),
@@ -48,7 +47,6 @@ const MovieDetailsPage = () => {
         } else {
           setMovieInform(data);
           setStatus(RESOLVED);
-          notification('success', 'Movie details uploaded successfully!');
         }
       })
       .catch(error => {
@@ -70,56 +68,20 @@ const MovieDetailsPage = () => {
   return (
     <>
       {status === 'pending' && <Spinner />}
-      <div className={styles['movie-details']}>
-        {(status === 'rejected' || status === 'resolved') && (
-          <Button name={'Back'} nameClass="back-button" onClick={onGoBack} />
-        )}
-        {status === 'rejected' && <NotFound />}
-        {status === 'resolved' && (
-          <>
-            <MovieCardDetails movieInform={movieInform} />
-            <div className={styles['movie-details-add-inform']}>
-              <h3 className={styles['movie-details-add-inform-title']}>
-                Additional information:
-              </h3>
-              <ul className={styles['movie-details-add-inform-list']}>
-                <li className={styles['movie-details-add-inform-item']}>
-                  <NavLink
-                    className={styles['movie-details-add-inform-link']}
-                    activeClassName={
-                      styles['movie-details-add-inform-link-active']
-                    }
-                    to={{
-                      pathname: `${url}/cast`,
-                      state: { from: location },
-                    }}
-                  >
-                    Cast
-                  </NavLink>
-                </li>
-                <li className={styles['movie-details-add-inform-item']}>
-                  <NavLink
-                    className={styles['movie-details-add-inform-link']}
-                    activeClassName={
-                      styles['movie-details-add-inform-link-active']
-                    }
-                    to={{
-                      pathname: `${url}/reviews`,
-                      state: { from: location },
-                    }}
-                  >
-                    Reviews
-                  </NavLink>
-                </li>
-              </ul>
-            </div>
-            <div className={styles['movie-details-add-inform-wrapper']}>
-              <Route exact path={`${path}/cast`} component={Cast} />
-              <Route exact path={`${path}/reviews`} component={Reviews} />
-            </div>
-          </>
-        )}
-      </div>
+      {(status === 'rejected' || status === 'resolved') && (
+        <Button name={'Back'} nameClass="back-button" onClick={onGoBack} />
+      )}
+      {status === 'rejected' && <NotFound />}
+      {status === 'resolved' && (
+        <>
+          <MovieCardDetails movieInform={movieInform} />
+          <AddInfoNavigation url={url} />
+          <Suspense fallback={<Spinner />}>
+            <Route exact path={`${path}/cast`} component={Cast} />
+            <Route exact path={`${path}/reviews`} component={Reviews} />
+          </Suspense>
+        </>
+      )}
     </>
   );
 };

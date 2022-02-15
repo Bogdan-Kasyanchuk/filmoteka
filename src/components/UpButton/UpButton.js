@@ -8,13 +8,7 @@ const UpButton = () => {
       ContainerClassName={styles['for-container']}
       TransitionClassName={styles['for-transition']}
     >
-      <ImArrowUp
-        style={{
-          width: 20,
-          height: 20,
-          display: 'block',
-        }}
-      />
+      <ImArrowUp />
     </ScrollUpButton>
   );
 };

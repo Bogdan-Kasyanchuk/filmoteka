@@ -3,7 +3,7 @@ import styles from './Navigation.module.css';
 
 const Navigation = () => {
   return (
-    <nav className={styles.navigation}>
+    <nav>
       <ul className={styles['navigation-list']}>
         <li className={styles['navigation-item']}>
           <NavLink
@@ -12,7 +12,7 @@ const Navigation = () => {
             className={styles['navigation-link']}
             activeClassName={styles['navigation-link-active']}
           >
-            HOME
+            Home
           </NavLink>
         </li>
         <li className={styles['navigation-item']}>
@@ -21,7 +21,7 @@ const Navigation = () => {
             className={styles['navigation-link']}
             activeClassName={styles['navigation-link-active']}
           >
-            MOVIE
+            Movie
           </NavLink>
         </li>
       </ul>

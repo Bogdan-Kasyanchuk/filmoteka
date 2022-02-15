@@ -1,0 +1,41 @@
+.movie-details-add-inform-title {
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  color: #ffffff;
+}
+
+.movie-details-add-inform-list {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  align-items: center;
+  border-bottom: 1px solid #ffffff;
+}
+
+.movie-details-add-inform-item:not(:last-child) {
+  margin-right: 15px;
+  padding-right: 15px;
+  border-right: 1px solid #ffffff;
+}
+
+.movie-details-add-inform-link {
+  padding: 5px;
+  font-size: 24px;
+  line-height: 1;
+  color: #ffffff;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.movie-details-add-inform-link:hover,
+.movie-details-add-inform-link:focus-visible {
+  color: #08587d;
+  outline: none;
+}
+
+.movie-details-add-inform-link-active {
+  color: #18819e;
+}

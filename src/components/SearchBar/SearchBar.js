@@ -30,7 +30,7 @@ const SearchBar = ({ onSubmit }) => {
   return (
     <form className={styles['search-form']} onSubmit={handlerSubmit}>
       <button className={styles['search-form-button']} type="submit">
-        <CgSearch style={{ width: 28, height: 28, display: 'block' }} />
+        <CgSearch />
       </button>
       <input
         className={styles['search-form-input']}
@@ -46,7 +46,7 @@ const SearchBar = ({ onSubmit }) => {
         type="button"
         onClick={handlerClick}
       >
-        <BiBrush style={{ width: 28, height: 28, display: 'block' }} />
+        <BiBrush />
       </button>
     </form>
   );

@@ -1,6 +1,12 @@
 .not-found {
   margin-left: auto;
   margin-right: auto;
-  width: 500px;
+  max-width: 500px;
   padding-top: 20px;
+}
+
+.not-found-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }

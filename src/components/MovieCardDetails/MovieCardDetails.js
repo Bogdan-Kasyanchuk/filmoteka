@@ -60,7 +60,7 @@ const MovieCardDetails = ({ movieInform }) => {
           <ul className={styles['movie-card-details-genres-list']}>
             {genres.map(element => (
               <li
-                className={styles['movie-card-details-item']}
+                className={styles['movie-card-details-genres-item']}
                 key={element.id}
               >
                 {element.name}

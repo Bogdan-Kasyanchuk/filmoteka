@@ -5,7 +5,7 @@ import styles from './AppBar.module.css';
 const AppBar = () => {
   return (
     <header className={styles.header}>
-      <Logo children="MOVIE LIBRARY" />
+      <Logo children="Movie library" />
       <Navigation />
     </header>
   );
